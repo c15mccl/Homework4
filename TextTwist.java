@@ -7,9 +7,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.imageio.*;
 /**
- * This creates a JPanel of a game called TextTwist, you must 
+ * This creates a JPanel of a game called TextTwist, a dialogue box will
+ * pop up asking what difficulty, then the board will pop up
  *
- * @author Austin Gage, Rose Wilson, Derek McPhail, Cheryl McClean
+ * @author Austin Gage, Rose Wilson, Derek McPhail, Cheryl McClean,
+ *  Mark Eliseo
  * @version 3/18/2019
  */
 public class TextTwist extends JPanel implements KeyListener, MouseListener
@@ -18,6 +20,7 @@ public class TextTwist extends JPanel implements KeyListener, MouseListener
     static int numWord;
     String s = "";
     String word = "";
+    ArrayList<String> arr = new ArrayList<String>();
     /**
      * Constructor for objects of class KeyboardPanel
      */
@@ -32,19 +35,20 @@ public class TextTwist extends JPanel implements KeyListener, MouseListener
         word = getWord();
         addKeyListener( this );
     }
-    
+
     public void mouseExited(MouseEvent e) { }
-    
+
     public void mouseEntered(MouseEvent e) { }
-    
+
     public void mouseReleased(MouseEvent e) { }
-    
+
     public void mouseClicked(MouseEvent e)
     {
-        //THIS METHOD SHOULD CHECK WHERE THE MOUSE WAS CLICKED AND IF IT WAS IN THE TWIST BUTTON
+        //THIS METHOD SHOULD CHECK WHERE THE MOUSE WAS 
+        //CLICKED AND IF IT WAS IN THE TWIST BUTTON
         //CALL A METHOD THAT WILL 
     }
-    
+
     public void mousePressed(MouseEvent e) { }
 
     public void keyPressed( KeyEvent e ) { }
@@ -92,7 +96,8 @@ public class TextTwist extends JPanel implements KeyListener, MouseListener
         g.drawImage((Image)img,0,0,null);
         g.drawRect(0,0,250,622);
         g.fillRect(0,0,250,622);
-        Font font = new Font("Comic Sans", Font.PLAIN, 60);
+        g.setColor(Color.black);
+        Font font = new Font("Comic Sans", Font.BOLD, 60);
         g.setFont(font);
         g.drawString(s,300,250);
     }
@@ -118,33 +123,42 @@ public class TextTwist extends JPanel implements KeyListener, MouseListener
         frame.setVisible(true);
 
     }
-    
+
     private String getWord()
     {
-        File file = new File("input.txt");
-        Scanner sc;
-        try
+        boolean difficultySet = false;
+        Scanner sc = new Scanner(System.in);
+        File file = new File("easy.txt");
+        while(!difficultySet)
         {
-            sc = new Scanner(file);
+            String difficulty = JOptionPane.showInputDialog(null, "Enter easy, medium, or hard",
+                    "Input word", JOptionPane.QUESTION_MESSAGE);
+
+            file = new File(difficulty.toLowerCase() + ".txt");
+            try
+            {
+                sc = new Scanner(file);
+
+                difficultySet = true;
+            }
+            catch(java.io.FileNotFoundException e)
+            {
+            }
         }
-        catch(java.io.FileNotFoundException e)
+        word = sc.nextLine().toLowerCase();
+        arr.add(word);
+        while(sc.hasNext())
         {
-            return "";
+            arr.add(sc.nextLine().toLowerCase());
         }
-        String firstStrNumber = JOptionPane.showInputDialog(null, "Enter 1 2 or 3",
-            "Input first number", JOptionPane.QUESTION_MESSAGE);
-        numWord = Integer.parseInt(firstStrNumber);
-        for(int i = 0; i < numWord-1;i++)
-        {
-            sc.nextLine();
-        }
-        return sc.nextLine();
+        
+        return word;
     }
+
 
     public static void main(String[] args)
     {
-        
-        
+
         createAndShowGUI();
     }
 }
