@@ -12,13 +12,12 @@ import javax.imageio.*;
  * @author Austin Gage, Rose Wilson, Derek McPhail, Cheryl McClean
  * @version 3/18/2019
  */
-public class TextTwist extends JPanel implements KeyListener
+public class TextTwist extends JPanel implements KeyListener, MouseListener
 {
     int width, height;
     static int numWord;
     String s = "";
     String word = "";
-    JTextField textField;
     /**
      * Constructor for objects of class KeyboardPanel
      */
@@ -31,9 +30,22 @@ public class TextTwist extends JPanel implements KeyListener
         setBackground( Color.BLUE );
         setFocusable(true);
         word = getWord();
-        textField = new JTextField(word);
         addKeyListener( this );
     }
+    
+    public void mouseExited(MouseEvent e) { }
+    
+    public void mouseEntered(MouseEvent e) { }
+    
+    public void mouseReleased(MouseEvent e) { }
+    
+    public void mouseClicked(MouseEvent e)
+    {
+        //THIS METHOD SHOULD CHECK WHERE THE MOUSE WAS CLICKED AND IF IT WAS IN THE TWIST BUTTON
+        //CALL A METHOD THAT WILL 
+    }
+    
+    public void mousePressed(MouseEvent e) { }
 
     public void keyPressed( KeyEvent e ) { }
 
@@ -47,7 +59,7 @@ public class TextTwist extends JPanel implements KeyListener
             if(word.charAt(i) == c)
                 charInString = true;
         }
-        if ( c != KeyEvent.CHAR_UNDEFINED && charInString) {
+        if ( c != KeyEvent.CHAR_UNDEFINED && charInString && s.length() < word.length()) {
             s = s + c;
             repaint();
             e.consume();
@@ -80,7 +92,9 @@ public class TextTwist extends JPanel implements KeyListener
         g.drawImage((Image)img,0,0,null);
         g.drawRect(0,0,250,622);
         g.fillRect(0,0,250,622);
-        g.drawString(s,400,300);
+        Font font = new Font("Comic Sans", Font.PLAIN, 60);
+        g.setFont(font);
+        g.drawString(s,300,250);
     }
 
     /**
@@ -107,11 +121,6 @@ public class TextTwist extends JPanel implements KeyListener
     
     private String getWord()
     {
-        return "";
-    }
-
-    public static void main(String[] args)
-    {
         File file = new File("input.txt");
         Scanner sc;
         try
@@ -120,11 +129,22 @@ public class TextTwist extends JPanel implements KeyListener
         }
         catch(java.io.FileNotFoundException e)
         {
-            return;
+            return "";
         }
         String firstStrNumber = JOptionPane.showInputDialog(null, "Enter 1 2 or 3",
             "Input first number", JOptionPane.QUESTION_MESSAGE);
         numWord = Integer.parseInt(firstStrNumber);
+        for(int i = 0; i < numWord-1;i++)
+        {
+            sc.nextLine();
+        }
+        return sc.nextLine();
+    }
+
+    public static void main(String[] args)
+    {
+        
+        
         createAndShowGUI();
     }
 }
