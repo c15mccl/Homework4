@@ -16,7 +16,7 @@ import java.util.Random;
 public class TextTwist extends JPanel implements  MouseListener
 {
     int width, height;
-    static int numWord;
+    Integer score=0;
     String s = "";
     String word = "";
     ArrayList<String> arr = new ArrayList<String>();
@@ -67,7 +67,7 @@ public class TextTwist extends JPanel implements  MouseListener
         g2.setStroke(new BasicStroke(2));
         for(int i = 0;i < 6;i++)
         {
-            g2.drawRect(300 + i*90,140,90,90);
+            g2.drawRect(300 + i*90,75,90,90);
         }
         Font font = new Font("Comic Sans", Font.BOLD, 40);
         g.setFont(font);
@@ -87,10 +87,20 @@ public class TextTwist extends JPanel implements  MouseListener
         }
         for(int i = 0;i < 6;i++)
         {
-            g2.drawOval(350 + i*70,320,70,70);
-            g.drawString(randWord.substring(i,i+1),350 + i*70 + 25 ,320 + 50);
+            g2.drawOval(350 + i*70,200,70,70);
+            g.drawString(randWord.substring(i,i+1),350 + i*70 + 25 ,250);
         }
-        g.drawString(s,300,250);
+        g2.drawRect(310,350,140,50);
+        g2.drawString("Twist",325,390);
+        
+        g2.drawRect(460,350,140,50);
+        g2.drawString("Clear",475,390);
+        
+        g2.drawRect(610,350,140,50);
+        g2.drawString("Enter",625,390);
+        
+        g2.drawString("Score",325,500);
+        g2.drawString(score.toString(),325,550);
     }
 
     private void makeEasyBoard(Graphics g)
