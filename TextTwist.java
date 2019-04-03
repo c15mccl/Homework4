@@ -17,17 +17,24 @@ public class TextTwist extends JPanel implements  MouseListener
 {
     int width, height;
     Integer score=0;
-    String s = "";
     String word = "";
-    ArrayList<String> arr = new ArrayList<String>();
+    ArrayList<WordList> arr = new ArrayList<WordList>();
+    ArrayList<String> chars = new ArrayList<String>();
+    ArrayList<Boolean> charUsed = new ArrayList<Boolean>();
+    String currentGuess = "";
     String difficulty;
     Random rand = new Random();
     boolean textPainted = false;
+    boolean clearPressed = false;
     /**
      * Constructor for objects of class KeyboardPanel
      */
     public TextTwist()
     {
+        for(int i = 0;i < 6;i++)
+        {
+            charUsed.add(false);
+        }
         setPreferredSize(new Dimension(850, 650));
         setOpaque(true);
         width = getPreferredSize().width;
@@ -46,9 +53,91 @@ public class TextTwist extends JPanel implements  MouseListener
 
     public void mouseClicked(MouseEvent e)
     {
-        //THIS METHOD SHOULD CHECK WHERE THE MOUSE WAS 
-        //CLICKED AND IF IT WAS IN THE TWIST BUTTON
-        //CALL A METHOD THAT WILL 
+        int x = e.getX();
+        int y = e.getY();
+        //TWIST BUTTON PRESSED
+        if(x <=450 && x >= 310 && y <= 400 && y>=350) 
+        {
+            textPainted = false;
+            repaint();
+        }
+
+        //CLEAR BUTTON PRESSED 
+        if(x <=500 && x >= 460 && y <= 400 && y>=350) 
+        {
+            clearPressed = true;
+            repaint();
+        }
+
+        //ENTER BUTTON PRESSED 
+        if(x <=750 && x >= 610 && y <= 400 && y>=350) 
+        {
+            guessWord();
+            currentGuess = "";
+            repaint();
+        }
+
+        //FIRST CIRCLE 350 + i*70,200,70,70
+        if(x <=420 && x >= 350 && y <= 270 && y>=200) 
+        {
+            if(!charUsed.get(0))
+            {
+                currentGuess += chars.get(0);
+                charUsed.set(0,true);
+            }
+            repaint();
+        }
+        //SECOND CIRCLE
+        if(x <=490 && x >= 420 && y <= 270 && y>=200) 
+        {
+            if(!charUsed.get(1))
+            {
+                currentGuess += chars.get(1);
+                charUsed.set(1,true);
+            }
+            repaint();
+        }
+        //THIRD CIRCLE
+        if(x <=560 && x >= 490 &&  y <= 270 && y>=200) 
+        {
+            if(!charUsed.get(2))
+            {
+                currentGuess += chars.get(2);
+                charUsed.set(2,true);
+            }
+            repaint();
+        }
+        //FOURTH CIRCLE
+        if(x <=620 && x >= 560 && y <= 270 && y>=200) 
+        {
+            if(!charUsed.get(3))
+            {
+                currentGuess += chars.get(3);
+                charUsed.set(3,true);
+            }
+            repaint();
+        }
+        //FIFTH CIRCLE
+        if(x <=690 && x >= 620 && y <= 270 && y>=200) 
+        {
+            if(!charUsed.get(4))
+            {
+                currentGuess += chars.get(4);
+                charUsed.set(4,true);
+            }
+            repaint();
+        }
+        //SIXTH CIRCLE
+        if(x <= 760 && x >= 690 && y <= 270 && y>=200) 
+        {
+            if(!charUsed.get(5))
+            {
+                currentGuess += chars.get(5);
+                charUsed.set(5,true);
+            }
+            repaint();
+        }
+
     }
 
     public void mousePressed(MouseEvent e) { }
@@ -69,17 +158,29 @@ public class TextTwist extends JPanel implements  MouseListener
         {
             g2.drawRect(300 + i*90,75,90,90);
         }
-        Font font = new Font("Comic Sans", Font.BOLD, 40);
-        g.setFont(font);
-        String randWord = "";
-        String word1 = word;
-        
-        if(!textPainted)
+
+        if(clearPressed)
         {
             for(int i = 0;i < 6;i++)
             {
+                g2.drawRect(300 + i*90,75,90,90);
+            }
+            clearPressed = false;
+        }
+
+        
+
+        Font font = new Font("Comic Sans", Font.BOLD, 40);
+        g.setFont(font);
+        String word1 = word;
+
+        if(!textPainted)
+        {
+            chars.clear();
+            for(int i = 0;i < 6;i++)
+            {
                 int num = rand.nextInt(word1.length());
-                randWord += word1.substring(num,num+1);
+                chars.add(word1.substring(num,num+1));
                 int len = word1.length();
                 word1 = word1.substring(0,num) + word1.substring(num+1,len);
             }
@@ -88,17 +189,34 @@ public class TextTwist extends JPanel implements  MouseListener
         for(int i = 0;i < 6;i++)
         {
             g2.drawOval(350 + i*70,200,70,70);
-            g.drawString(randWord.substring(i,i+1),350 + i*70 + 25 ,250);
+            g2.setColor(new Color(0,204,255));
+            g2.fillOval(350 + i*70,200,70,70);
+            g2.setColor(Color.WHITE);
+            g.drawString(chars.get(i),350 + i*70 + 25 ,250);
+        }
+        
+        if(currentGuess.length() != 0)
+        {
+            for(int i = 0;i < charUsed.size();i++)
+            {
+                if(charUsed.get(i))
+                {
+                    g2.fillOval(350 + i*70,200,70,70);
+                }
+                if(i < currentGuess.length())
+                    g2.drawString(currentGuess.substring(i,i+1),300 + i*90,75);
+            }
+
         }
         g2.drawRect(310,350,140,50);
         g2.drawString("Twist",325,390);
-        
+
         g2.drawRect(460,350,140,50);
         g2.drawString("Clear",475,390);
-        
+
         g2.drawRect(610,350,140,50);
         g2.drawString("Enter",625,390);
-        
+
         g2.drawString("Score",325,500);
         g2.drawString(score.toString(),325,550);
     }
@@ -114,6 +232,13 @@ public class TextTwist extends JPanel implements  MouseListener
         g2.drawRect(10,210,90,50);
         g2.drawRect(10,260,70,50);
         g2.drawRect(10,310,70,50);
+        for(int i = 0;i < arr.size();i++)
+        {
+            if(arr.get(i).getWordFound())
+            {
+                g2.drawString(arr.get(i).getWord(),10,10+50*i);
+            }
+        }
     }
 
     private void makeMediumBoard(Graphics g)
@@ -135,6 +260,13 @@ public class TextTwist extends JPanel implements  MouseListener
         g2.drawRect(10,490,70,40);
         g2.drawRect(10,530,70,40);
         g2.drawRect(10,570,70,40);
+        for(int i = 0;i < arr.size();i++)
+        {
+            if(arr.get(i).getWordFound())
+            {
+                g2.drawString(arr.get(i).getWord(),10,10+40*i);
+            }
+        }
     }
 
     private void makeHardBoard(Graphics g)
@@ -162,6 +294,13 @@ public class TextTwist extends JPanel implements  MouseListener
         g2.drawRect(10,550,70,30);
         g2.drawRect(10,580,70,30);
         g2.drawRect(10,610,70,30);
+        for(int i = 0;i < arr.size();i++)
+        {
+            if(arr.get(i).getWordFound())
+            {
+                g2.drawString(arr.get(i).getWord(),10,10+30*i);
+            }
+        }
     }
 
     /**
@@ -186,6 +325,23 @@ public class TextTwist extends JPanel implements  MouseListener
 
     }
 
+    private void guessWord()
+    {
+        if(currentGuess.length() < 3)
+            return;
+        for(int i = 0;i < arr.size();i++)
+        {
+            if(i < charUsed.size())
+                charUsed.set(i,false);
+            if(arr.get(i).getWord().equals(currentGuess))
+            {
+                arr.get(i).setWordFound(true);
+                score += 10 * arr.get(i).getWord().length();
+                return;
+            }
+        }
+    }
+
     private String getWord()
     {
         boolean difficultySet = false;
@@ -208,10 +364,10 @@ public class TextTwist extends JPanel implements  MouseListener
             }
         }
         word = sc.nextLine().toLowerCase();
-        arr.add(word);
+        arr.add(new WordList(word));
         while(sc.hasNext())
         {
-            arr.add(sc.nextLine().toLowerCase());
+            arr.add(new WordList(sc.nextLine().toLowerCase()));
         }
 
         return word;
