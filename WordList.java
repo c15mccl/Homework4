@@ -30,6 +30,7 @@ public class WordList
         this.wordFound = wordFound;
     }
     
+    
     public boolean getWordFound()
     {
         return wordFound;
