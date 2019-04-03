@@ -26,6 +26,8 @@ public class TextTwist extends JPanel implements  MouseListener
     Random rand = new Random();
     boolean textPainted = false;
     boolean clearPressed = false;
+    boolean gameWon = false;
+    
     /**
      * Constructor for objects of class KeyboardPanel
      */
@@ -63,7 +65,7 @@ public class TextTwist extends JPanel implements  MouseListener
         }
 
         //CLEAR BUTTON PRESSED 
-        if(x <=500 && x >= 460 && y <= 400 && y>=350) 
+        if(x <=600 && x >= 460 && y <= 400 && y>=350) 
         {
             clearPressed = true;
             repaint();
@@ -145,80 +147,98 @@ public class TextTwist extends JPanel implements  MouseListener
     @Override
     public void paintComponent( Graphics g ) { 
         super.paintComponent(g);
-        g.setColor(Color.WHITE);
-        if(difficulty.equals("easy"))
-            makeEasyBoard(g);
-        else if(difficulty.equals("medium"))
-            makeMediumBoard(g);
-        else if(difficulty.equals("hard"))
-            makeHardBoard(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(2));
-        for(int i = 0;i < 6;i++)
-        {
-            g2.drawRect(300 + i*90,75,90,90);
-        }
+        g.setColor(Color.WHITE);
 
-        if(clearPressed)
+        if(!gameWon)
         {
+            if(difficulty.equals("easy"))
+                makeEasyBoard(g);
+            else if(difficulty.equals("medium"))
+                makeMediumBoard(g);
+            else if(difficulty.equals("hard"))
+                makeHardBoard(g);
+
             for(int i = 0;i < 6;i++)
             {
                 g2.drawRect(300 + i*90,75,90,90);
             }
-            clearPressed = false;
-        }
 
-        
+            if(clearPressed)
+            {
+                currentGuess = "";
+                for(int i = 0;i < charUsed.size();i++)
+                {
+                    charUsed.set(i,false);
+                }
+                clearPressed = false;
+            }
 
-        Font font = new Font("Comic Sans", Font.BOLD, 40);
-        g.setFont(font);
-        String word1 = word;
+            Font font = new Font("Comic Sans", Font.BOLD, 40);
+            g.setFont(font);
+            String word1 = word;
 
-        if(!textPainted)
-        {
-            chars.clear();
+            if(!textPainted)
+            {
+                chars.clear();
+                for(int i = 0;i < 6;i++)
+                {
+                    int num = rand.nextInt(word1.length());
+                    chars.add(word1.substring(num,num+1));
+                    int len = word1.length();
+                    word1 = word1.substring(0,num) + word1.substring(num+1,len);
+                }
+                textPainted = true;
+            }
             for(int i = 0;i < 6;i++)
             {
-                int num = rand.nextInt(word1.length());
-                chars.add(word1.substring(num,num+1));
-                int len = word1.length();
-                word1 = word1.substring(0,num) + word1.substring(num+1,len);
+                g2.drawOval(350 + i*70,200,70,70);
+                g2.setColor(new Color(0,204,255));
+                g2.fillOval(350 + i*70,200,70,70);
+                g2.setColor(Color.WHITE);
+                g.drawString(chars.get(i),350 + i*70 + 25 ,250);
             }
-            textPainted = true;
-        }
-        for(int i = 0;i < 6;i++)
-        {
-            g2.drawOval(350 + i*70,200,70,70);
-            g2.setColor(new Color(0,204,255));
-            g2.fillOval(350 + i*70,200,70,70);
-            g2.setColor(Color.WHITE);
-            g.drawString(chars.get(i),350 + i*70 + 25 ,250);
-        }
-        
-        if(currentGuess.length() != 0)
-        {
-            for(int i = 0;i < charUsed.size();i++)
+
+            if(currentGuess.length() != 0)
             {
-                if(charUsed.get(i))
+                for(int i = 0;i < charUsed.size();i++)
                 {
-                    g2.fillOval(350 + i*70,200,70,70);
+                    if(charUsed.get(i))
+                    {
+                        g2.fillOval(350 + i*70,200,70,70);
+                    }
+                    if(i < currentGuess.length())
+                        g2.drawString(currentGuess.substring(i,i+1),300 + i*90 + 40,125);
                 }
-                if(i < currentGuess.length())
-                    g2.drawString(currentGuess.substring(i,i+1),300 + i*90,75);
+
             }
+            g2.drawRect(310,350,140,50);
+            g2.drawString("Twist",325,390);
 
+            g2.drawRect(460,350,140,50);
+            g2.drawString("Clear",475,390);
+
+            g2.drawRect(610,350,140,50);
+            g2.drawString("Enter",625,390);
+
+            g2.drawString("Score",325,500);
+            g2.drawString(score.toString(),325,550);
         }
-        g2.drawRect(310,350,140,50);
-        g2.drawString("Twist",325,390);
+        else
+        {
+            g2.setStroke(new BasicStroke(4));
+            g2.drawRect(100,100,500,400);
+            g2.setColor(new Color(0,204,255));
+            g2.fillRect(100,100,500,400);
+            g2.setColor(Color.WHITE);
+            Font font = new Font("Comic Sans", Font.BOLD, 40);
+            g2.setFont(font);
+            g2.drawString("WINNER!!", 150,150); 
+            g2.drawString("If you want to play again,",125,300);
+            g2.drawString("restart the program",150,450);
+        }
 
-        g2.drawRect(460,350,140,50);
-        g2.drawString("Clear",475,390);
-
-        g2.drawRect(610,350,140,50);
-        g2.drawString("Enter",625,390);
-
-        g2.drawString("Score",325,500);
-        g2.drawString(score.toString(),325,550);
     }
 
     private void makeEasyBoard(Graphics g)
@@ -232,11 +252,14 @@ public class TextTwist extends JPanel implements  MouseListener
         g2.drawRect(10,210,90,50);
         g2.drawRect(10,260,70,50);
         g2.drawRect(10,310,70,50);
+        g2.drawRect(10,360,70,50);
+        Font font = new Font("Comic Sans", Font.BOLD,24);
+        g2.setFont(font);
         for(int i = 0;i < arr.size();i++)
         {
             if(arr.get(i).getWordFound())
             {
-                g2.drawString(arr.get(i).getWord(),10,10+50*i);
+                g2.drawString(arr.get(i).getWord(),30,50*(i+1)-10);
             }
         }
     }
@@ -260,11 +283,13 @@ public class TextTwist extends JPanel implements  MouseListener
         g2.drawRect(10,490,70,40);
         g2.drawRect(10,530,70,40);
         g2.drawRect(10,570,70,40);
+        Font font = new Font("Comic Sans", Font.BOLD,24);
+        g2.setFont(font);
         for(int i = 0;i < arr.size();i++)
         {
             if(arr.get(i).getWordFound())
             {
-                g2.drawString(arr.get(i).getWord(),10,10+40*i);
+                g2.drawString(arr.get(i).getWord(),40,10+40*(i+1));
             }
         }
     }
@@ -294,11 +319,13 @@ public class TextTwist extends JPanel implements  MouseListener
         g2.drawRect(10,550,70,30);
         g2.drawRect(10,580,70,30);
         g2.drawRect(10,610,70,30);
+        Font font = new Font("Comic Sans", Font.BOLD,24);
+        g2.setFont(font);
         for(int i = 0;i < arr.size();i++)
         {
             if(arr.get(i).getWordFound())
             {
-                g2.drawString(arr.get(i).getWord(),10,10+30*i);
+                g2.drawString(arr.get(i).getWord(),40,10+30*(i+1));
             }
         }
     }
@@ -327,17 +354,31 @@ public class TextTwist extends JPanel implements  MouseListener
 
     private void guessWord()
     {
+        for(int i = 0;i < charUsed.size();i++)
+        {
+            charUsed.set(i,false);
+        }
         if(currentGuess.length() < 3)
             return;
         for(int i = 0;i < arr.size();i++)
         {
+            String getWord = arr.get(i).getWord();
             if(i < charUsed.size())
                 charUsed.set(i,false);
-            if(arr.get(i).getWord().equals(currentGuess))
+            if(getWord.equals(currentGuess) && !arr.get(i).getWordFound())
             {
                 arr.get(i).setWordFound(true);
                 score += 10 * arr.get(i).getWord().length();
-                return;
+            }
+        }
+        //SETS GAMEWON TO TRUE BUT UNLESS ALL WORDS ARE SET TO TRUE,
+        //IS SET BACK TO FALSE
+        gameWon = true;
+        for(int i = 0;i < arr.size();i++)
+        {
+            if(!arr.get(i).getWordFound())
+            {
+                gameWon = false;
             }
         }
     }
