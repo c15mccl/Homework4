@@ -27,7 +27,7 @@ public class TextTwist extends JPanel implements  MouseListener
     boolean textPainted = false;
     boolean clearPressed = false;
     boolean gameWon = false;
-    
+
     /**
      * Constructor for objects of class KeyboardPanel
      */
@@ -178,17 +178,58 @@ public class TextTwist extends JPanel implements  MouseListener
             Font font = new Font("Comic Sans", Font.BOLD, 40);
             g.setFont(font);
             String word1 = word;
-
+            int num = 0;
             if(!textPainted)
             {
-                chars.clear();
-                for(int i = 0;i < 6;i++)
-                {
-                    int num = rand.nextInt(word1.length());
-                    chars.add(word1.substring(num,num+1));
-                    int len = word1.length();
-                    word1 = word1.substring(0,num) + word1.substring(num+1,len);
-                }
+                //CODE IN PROGRESS FOR USING TWIST MIDWAY THROUGH
+                //WRITING A LETTER, HARDER THAN EXPECTED
+                // if(currentGuess.length() != 0)
+                // {
+                    // word1 = "";
+                    // for(int i = 0;i < charUsed.size();i++)
+                    // {
+                        // if(!charUsed.get(i))
+                        // {
+                            // word1 += chars.get(i);
+                        // }
+                        // chars.remove(i);
+                    // }
+                    // String word2 = word1;
+                    // boolean twisted = false;
+                    // for(int i = 0;i < 6;i++)
+                    // {
+                        // if(charUsed.get(i))
+                        // {
+                            // chars.add(word2.substring(i,i+1));
+                        // }
+                        // else
+                        // {
+                            // while(!twisted)
+                            // {
+                                // num = rand.nextInt(word1.length());
+                                // if(!charUsed.get(num))
+                                    // twisted = true;
+                            // }
+                            // chars.add(word1.substring(num,num+1));
+                            // int len = word1.length();
+                            // word1 = word1.substring(0,num) + word1.substring(num+1,len);
+                            // num = rand.nextInt(word1.length());
+
+                        // }
+                    // }
+
+                // }
+                //else
+                //{
+                    chars.clear();
+                    for(int i = 0;i < 6;i++)
+                    {
+                        num = rand.nextInt(word1.length());
+                        chars.add(word1.substring(num,num+1));
+                        int len = word1.length();
+                        word1 = word1.substring(0,num) + word1.substring(num+1,len);
+                    }
+                //}
                 textPainted = true;
             }
             for(int i = 0;i < 6;i++)
