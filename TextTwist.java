@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.util.Random;
 /**
  * This creates a JPanel of a game called TextTwist, a dialogue box will
- * pop up asking what difficulty, then the board will pop up
+ * pop up asking what difficulty, then the board will pop up and can be played
  *
  * @author Austin Gage, Rose Wilson, Derek McPhail, Cheryl McClean,
  *  Mark Eliseo
