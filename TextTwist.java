@@ -15,18 +15,18 @@ import java.util.Random;
  */
 public class TextTwist extends JPanel implements  MouseListener
 {
-    int width, height;
-    Integer score=0;
-    String word = "";
-    ArrayList<WordList> arr = new ArrayList<WordList>();
-    ArrayList<String> chars = new ArrayList<String>();
-    ArrayList<Boolean> charUsed = new ArrayList<Boolean>();
-    String currentGuess = "";
-    String difficulty;
-    Random rand = new Random();
-    boolean textPainted = false;
-    boolean clearPressed = false;
-    boolean gameWon = false;
+    private int width, height;
+    private Integer score=0;
+    private String word = "";
+    private ArrayList<WordList> arr = new ArrayList<WordList>();
+    private ArrayList<String> chars = new ArrayList<String>();
+    private ArrayList<Boolean> charUsed = new ArrayList<Boolean>();
+    private String currentGuess = "";
+    private String difficulty;
+    private Random rand = new Random();
+    private boolean textPainted = false;
+    private boolean clearPressed = false;
+    private boolean gameWon = false;
 
     /**
      * Constructor for objects of class KeyboardPanel
@@ -46,13 +46,21 @@ public class TextTwist extends JPanel implements  MouseListener
         word = getWord();
         addMouseListener(this);
     }
-
+    
+    /**
+     * Empty methods that had to be overriden to use MouseListener
+     * 
+     */
     public void mouseExited(MouseEvent e) { }
-
     public void mouseEntered(MouseEvent e) { }
-
     public void mouseReleased(MouseEvent e) { }
-
+    public void mousePressed(MouseEvent e) { }
+    
+    /**
+     * This method checks to see where the mouse was clicked, and calls
+     * the appropriate method, like if twist is pressed or if enter is pressed
+     * @param the MouseEvent that started the method
+     */
     public void mouseClicked(MouseEvent e)
     {
         int x = e.getX();
@@ -79,7 +87,7 @@ public class TextTwist extends JPanel implements  MouseListener
             repaint();
         }
 
-        //FIRST CIRCLE 350 + i*70,200,70,70
+        //FIRST CIRCLE 
         if(x <=420 && x >= 350 && y <= 270 && y>=200) 
         {
             if(!charUsed.get(0))
@@ -142,8 +150,12 @@ public class TextTwist extends JPanel implements  MouseListener
 
     }
 
-    public void mousePressed(MouseEvent e) { }
-
+    /**
+     * Method that paints the JPanel
+     * 
+     * @param a Graphics object g
+     * 
+     */
     @Override
     public void paintComponent( Graphics g ) { 
         super.paintComponent(g);
@@ -181,54 +193,26 @@ public class TextTwist extends JPanel implements  MouseListener
             int num = 0;
             if(!textPainted)
             {
-                //CODE IN PROGRESS FOR USING TWIST MIDWAY THROUGH
-                //WRITING A LETTER, HARDER THAN EXPECTED
-                // if(currentGuess.length() != 0)
-                // {
-                    // word1 = "";
-                    // for(int i = 0;i < charUsed.size();i++)
-                    // {
-                        // if(!charUsed.get(i))
-                        // {
-                            // word1 += chars.get(i);
-                        // }
-                        // chars.remove(i);
-                    // }
-                    // String word2 = word1;
-                    // boolean twisted = false;
-                    // for(int i = 0;i < 6;i++)
-                    // {
-                        // if(charUsed.get(i))
-                        // {
-                            // chars.add(word2.substring(i,i+1));
-                        // }
-                        // else
-                        // {
-                            // while(!twisted)
-                            // {
-                                // num = rand.nextInt(word1.length());
-                                // if(!charUsed.get(num))
-                                    // twisted = true;
-                            // }
-                            // chars.add(word1.substring(num,num+1));
-                            // int len = word1.length();
-                            // word1 = word1.substring(0,num) + word1.substring(num+1,len);
-                            // num = rand.nextInt(word1.length());
-
-                        // }
-                    // }
-
-                // }
-                //else
-                //{
-                    chars.clear();
+                chars.clear();
+                for(int i = 0;i < 6;i++)
+                {
+                    num = rand.nextInt(word1.length());
+                    chars.add(word1.substring(num,num+1));
+                    int len = word1.length();
+                    word1 = word1.substring(0,num) + word1.substring(num+1,len);
+                }
+                if(currentGuess.length() > 0)
+                {
                     for(int i = 0;i < 6;i++)
                     {
-                        num = rand.nextInt(word1.length());
-                        chars.add(word1.substring(num,num+1));
-                        int len = word1.length();
-                        word1 = word1.substring(0,num) + word1.substring(num+1,len);
+                        if(currentGuess.contains(chars.get(i)))
+                        {
+                            charUsed.set(i,true);
+                        }
+                        else
+                            charUsed.set(i,false);
                     }
+                }
                 //}
                 textPainted = true;
             }
@@ -282,6 +266,12 @@ public class TextTwist extends JPanel implements  MouseListener
 
     }
 
+    /**
+     * Paints the boxes the words go in on the left of the JPanel and
+     * the words that have been found by the player if the difficulty 
+     * selected is "easy"
+     * @param a Graphics object g
+     */
     private void makeEasyBoard(Graphics g)
     {
         Graphics2D g2 = (Graphics2D) g;
@@ -305,6 +295,12 @@ public class TextTwist extends JPanel implements  MouseListener
         }
     }
 
+    /**
+     * Paints the boxes the words go in on the left of the JPanel and
+     * the words that have been found by the player if the difficulty 
+     * selected is "medium"
+     * @param a Graphics object g
+     */
     private void makeMediumBoard(Graphics g)
     {
         Graphics2D g2 = (Graphics2D) g;
@@ -330,11 +326,17 @@ public class TextTwist extends JPanel implements  MouseListener
         {
             if(arr.get(i).getWordFound())
             {
-                g2.drawString(arr.get(i).getWord(),40,10+40*(i+1));
+                g2.drawString(arr.get(i).getWord(),30,5+40*(i+1));
             }
         }
     }
 
+    /**
+     * Paints the boxes the words go in on the left of the JPanel and
+     * the words that have been found by the player if the difficulty 
+     * selected is "hard"
+     * @param a Graphics object g
+     */
     private void makeHardBoard(Graphics g)
     {
         Graphics2D g2 = (Graphics2D) g;
@@ -366,7 +368,7 @@ public class TextTwist extends JPanel implements  MouseListener
         {
             if(arr.get(i).getWordFound())
             {
-                g2.drawString(arr.get(i).getWord(),40,10+30*(i+1));
+                g2.drawString(arr.get(i).getWord(),30,5+30*(i+1));
             }
         }
     }
@@ -392,7 +394,17 @@ public class TextTwist extends JPanel implements  MouseListener
         frame.setVisible(true);
 
     }
-
+    
+    /**
+     * Method called when the "enter" button is pressed 
+     * that checks if the current guess submitted
+     * by the player is one of the words stored in ArrayList 
+     * arr, if it is it will set that word equal to true and 
+     * it will be printed to the JPanel, it also checks if
+     * all words are found and if so will end the game the next time 
+     * the board is painted.
+     * 
+     */
     private void guessWord()
     {
         for(int i = 0;i < charUsed.size();i++)
@@ -424,6 +436,18 @@ public class TextTwist extends JPanel implements  MouseListener
         }
     }
 
+    /**
+     * This method asks for what difficulty the player would 
+     * like to play by asking in a JOptionPane to type
+     * "easy","medium", or "hard". Will repeatedly ask until one
+     * of those Strings, this is not case sensitive. It will then
+     * fill an arrayList of the words that were selected that can be made
+     * from 6 letters and will return the longest word for use in different
+     * methods
+     * 
+     * @return the first index of the ArrayList, which is the longest word
+     * that uses all characters
+     */
     private String getWord()
     {
         boolean difficultySet = false;
@@ -455,6 +479,14 @@ public class TextTwist extends JPanel implements  MouseListener
         return word;
     }
 
+    
+    /**
+     * Main method that will call createAndShowGUI() and will
+     * run that method
+     * 
+     * @param Command Line arguments
+     * 
+     */
     public static void main(String[] args)
     {
 
