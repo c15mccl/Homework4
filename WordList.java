@@ -1,18 +1,22 @@
 
 /**
- * Write a description of class WordList here.
+ * Class that keeps track of what words have been found
+ * by the player
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Austin Gage, Rose Wilson, Derek McPhail, Cheryl McClean,
+ *  Mark Eliseo
+ * @version 4/8/2019
  */
 public class WordList
 {
-    // instance variables - replace the example below with your own
+    
     private String word;
     private boolean wordFound;
 
     /**
-     * Constructor for objects of class WordList
+     * Constructor for objects of class WordList, wordFound set
+     * to false by default
+     * @param a String word
      */
     public WordList(String word)
     {
@@ -20,17 +24,34 @@ public class WordList
         this.word = word;
     }
     
+    /**
+     * Accessor method for the word instance variable
+     * 
+     * @return a String word 
+     */
     public String getWord()
     {
         return word;
     }
-
+    
+    /**
+     * Mutator method that will set the WordFound 
+     * instance variable to the supplied one
+     * 
+     * @param new value of WordFound
+     * 
+     */
     public void setWordFound(boolean wordFound)
     {
         this.wordFound = wordFound;
     }
     
-    
+    /**
+     * Accessor method of the WordFound instance variable
+     * 
+     * @return value of WordFound instance variable
+     * 
+     */
     public boolean getWordFound()
     {
         return wordFound;
