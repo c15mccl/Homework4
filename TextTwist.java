@@ -203,15 +203,11 @@ public class TextTwist extends JPanel implements  MouseListener
                 }
                 if(currentGuess.length() > 0)
                 {
-                    String guess = currentGuess;
                     for(int i = 0;i < 6;i++)
                     {
-                        
-                        if(guess.contains(chars.get(i)))
+                        if(currentGuess.contains(chars.get(i)))
                         {
-                            int index = guess.indexOf(chars.get(i));
                             charUsed.set(i,true);
-                            guess = guess.substring(0,index) + guess.substring(index+1,guess.length());
                         }
                         else
                             charUsed.set(i,false);
@@ -493,6 +489,7 @@ public class TextTwist extends JPanel implements  MouseListener
      */
     public static void main(String[] args)
     {
+
         createAndShowGUI();
     }
 }
